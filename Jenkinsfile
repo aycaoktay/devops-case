@@ -15,6 +15,11 @@ pipeline {
                     url: 'https://github.com/aycaoktay/devops-case.git'
             }
         }
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
 
         stage('Code Scan') {
             steps {
