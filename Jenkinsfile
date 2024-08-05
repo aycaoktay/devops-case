@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-id')
         GITHUB_CREDENTIALS = credentials('github')
-        SNYK_API = credentials('snykapi')
+        
     }
 
     stages {
@@ -20,8 +20,8 @@ pipeline {
             steps {
                 snykSecurity(
                     organisation: 'aycaoktay',
-                    projectName: 'aycaoktay/devops-case',
-                    snykTokenId: 'snykapi',
+                    projectName: 'devops-case',
+                    snykTokenId: 'snyk-api',
                     snykInstallation: 'snyk',
                     targetFile: 'package.json'
                 )
