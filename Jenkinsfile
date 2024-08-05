@@ -23,7 +23,7 @@ pipeline {
                     organisation: 'aycaoktay',
                     projectName: 'aycaoktay/devops-case',
                     snykTokenId: credentialsId('snyk-api'),
-                    snykInstallation: 'snyk'
+                    snykInstallation: 'snyk',
                     targetFile: 'package.json'
                 )
             }
