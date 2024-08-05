@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-id')
         GITHUB_CREDENTIALS = credentials('github')
-        SNYK_API = credentialsId('snykapi')
+        SNYK_API = credentials('snykapi')
     }
 
     stages {
