@@ -1,28 +1,17 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'nodejs'
-        snyk 'Snyk'
-    }
-
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
-        GITHUB_CREDENTIALS = '6d599ca3-78ad-4eec-8f0a-2b411a876174'
+        DOCKER_HUB_CREDENTIALS = credentials('docker-id')
+        GITHUB_CREDENTIALS = credentials('github')
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    credentialsId: '6d599ca3-78ad-4eec-8f0a-2b411a876174',
-                    url: 'https://github.com/aycaoktay/the-devops-project.git' 
-            }
-        }
-        stage('Install Dependencies') {
-            steps {
-               // sh 'npm install'
-                sh 'npm install -g snyk'
+                    credentialsId: 'github',
+                    url: 'https://github.com/aycaoktay/devops-case.git' 
             }
         }
      
@@ -31,29 +20,29 @@ pipeline {
             steps {
                 snykSecurity(
                     organisation: 'aycaoktay',
-                    projectName: 'the-devops-project/weatherapp',
+                    projectName: 'aycaoktay/devops-case',
                     snykInstallation: 'Snyk',
-                    snykTokenId: 'snyk-token',
-                    targetFile: 'weatherapp/package.json'
+                    snykTokenId: 'snyk-api',
+                    targetFile: 'package.json'
                 )
             }
         }
         stage('Build') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                    sh 'docker build -t aycaoktay/weatherapp-devops:2.0 .'
+                withCredentials([usernamePassword(credentialsId: 'docker-id', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                    sh 'docker build -t aycaoktay/weatherapp-nodejs:1.0 .'
                 }
             }
         }
         stage('Image Scan') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: 'docker-id', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                            sh 'docker push aycaoktay/weatherapp-devops:2.0'
+                            sh 'docker push aycaoktay/weatherapp-nodejs:1.0 '
                         }
                     }
-                    sh 'grype aycaoktay/weatherapp-devops:2.0'
+                    sh 'grype aycaoktay/weatherapp-nodejs:1.0 '
                 }
             }
         }

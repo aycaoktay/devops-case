@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: weatherapp
-        image: aycaoktay/weatherapp-devops:2.0
+        image: aycaoktay/weatherapp-nodejs:1.0
         ports:
         - containerPort: 8080
 ---
