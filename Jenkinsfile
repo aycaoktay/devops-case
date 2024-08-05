@@ -21,7 +21,6 @@ pipeline {
                 snykSecurity(
                     organisation: 'aycaoktay',
                     projectName: 'aycaoktay/devops-case',
-                    snykInstallation: 'Snyk',
                     snykTokenId: 'snyk-api',
                     targetFile: 'package.json'
                 )
