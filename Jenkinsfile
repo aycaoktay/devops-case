@@ -12,22 +12,22 @@ pipeline {
             steps {
                 git branch: 'main',
                     credentialsId: 'github',
-                    url: 'https://github.com/aycaoktay/devops-case.git' 
+                    url: 'https://github.com/aycaoktay/devops-case.git'
             }
         }
-     
 
         stage('Code Scan') {
             steps {
                 snykSecurity(
                     organisation: 'aycaoktay',
                     projectName: 'aycaoktay/devops-case',
-                    snykTokenId: credentialsId('snyk-api'),
+                    snykTokenId: 'snyk-api',
                     snykInstallation: 'snyk',
                     targetFile: 'package.json'
                 )
             }
         }
+
         stage('Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-id', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
@@ -35,23 +35,26 @@ pipeline {
                 }
             }
         }
-        stage('Image Scan') {
+
+        stage('Image Scan and Push') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-id', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                            sh 'docker push aycaoktay/weatherapp-nodejs:1.0 '
+                        docker.withRegistry('https://index.docker.io/v1/', 'docker-id') {
+                            sh 'docker push aycaoktay/weatherapp-nodejs:1.0'
                         }
                     }
-                    sh 'grype aycaoktay/weatherapp-nodejs:1.0 '
+                    sh 'grype aycaoktay/weatherapp-nodejs:1.0'
                 }
             }
         }
+
         stage('Deploy to Kubernetes') {
             steps {
                 sh 'kubectl apply -f k8s/deployment.yaml'
             }
         }
+
         stage('Test') {
             steps {
                 sh 'npm start &'
