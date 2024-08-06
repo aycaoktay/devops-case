@@ -64,9 +64,9 @@ pipeline {
             steps {
                 script {
                     // Kubeconfig 
-                    withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG_FILE')]) {
-                        sh 'echo $KUBECONFIG_FILE'
-                        sh 'export KUBECONFIG=$KUBECONFIG_FILE'
+                    withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG')]) {
+                        sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+                        sh 'sed -i "s/latest/${BUILD_NUMBER}/g" k8s/deployment.yaml'
                         sh 'kubectl apply -f k8s/deployment.yaml'
                     }
                 }
