@@ -17,7 +17,8 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'npm install selenium-webdriver'
+                sh 'npm install selenium-webdriver@latest'
+                sh 'npm install chromedriver@latest'
             }
         }
 
