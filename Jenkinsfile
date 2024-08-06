@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-id')
         GITHUB_CREDENTIALS = credentials('github')
-        
+        KUBECONFIG = credentials('kubeconfig-id')
     }
 
     stages {
@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                sh 'npm install selenium-webdriver'
             }
         }
 
@@ -62,10 +62,16 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f k8s/deployment.yaml'
+                script {
+                    // Kubeconfig 
+                    withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG_FILE')]) {
+                        sh 'export KUBECONFIG=$KUBECONFIG_FILE'
+                        sh 'kubectl apply -f k8s/deployment.yaml'
+                    }
+                }
             }
         }
-
+ 
         stage('Test') {
             steps {
                 sh 'npm start &'
