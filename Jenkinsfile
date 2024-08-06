@@ -68,7 +68,7 @@ pipeline {
                 script {
                     // Kubeconfig 
                     withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG')]) {
-                        sh 'az login --service-principal -u $CLIENT_ID -p $CLIENT_SECRET --tenant $TENANT_ID '
+                        sh 'az login --service-principal -u $CLIENT_ID -p $CLIENT_SECRET --tenant $TENANT_ID'
                         sh 'az aks get-credentials --resource-group internDevopsCase --name MyK8SCluster'
                         //sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
                         sh 'sed -i "s/52/${BUILD_NUMBER}/g" devops-case/k8s/deployment.yaml'
