@@ -4,9 +4,11 @@ require('chromedriver');
 (async function example() {
   let options = new (require('selenium-webdriver')).chrome.Options()
     .addArguments('--no-sandbox')
-    .addArguments('--disable-dev-shm-usage');
+    .addArguments('--disable-dev-shm-usage')
+    .addArguments('--headless'); // Bu satır, arka planda tarayıcıyı çalıştırır, genellikle CI/CD ortamlarında kullanılır.
 
   let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
+  
   try {
     console.log('Navigating to the application...');
     await driver.get('http://74.248.83.42/aycaoktay/devops-case');
