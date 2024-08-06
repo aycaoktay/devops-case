@@ -42,7 +42,7 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-id', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                    sh 'docker build -t aycaoktay/weatherapp-nodejs:1.0 .'
+                    sh 'docker build -t aycaoktay/weatherapp-nodejs:${BUILD_ID} -f Dockerfile .'
                 }
             }
         }
@@ -52,10 +52,10 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-id', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                         docker.withRegistry('https://index.docker.io/v1/', 'docker-id') {
-                            sh 'docker push aycaoktay/weatherapp-nodejs:1.0'
+                            sh 'docker push aycaoktay/weatherapp-nodejs:${BUILD_ID}'
                         }
                     }
-                    sh 'grype aycaoktay/weatherapp-nodejs:1.0'
+                    sh 'grype aycaoktay/weatherapp-nodejs:${BUILD_ID}'
                 }
             }
         }
@@ -65,6 +65,7 @@ pipeline {
                 script {
                     // Kubeconfig 
                     withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG_FILE')]) {
+                        sh 'echo $KUBECONFIG_FILE'
                         sh 'export KUBECONFIG=$KUBECONFIG_FILE'
                         sh 'kubectl apply -f k8s/deployment.yaml'
                     }
