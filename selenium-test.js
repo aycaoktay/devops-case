@@ -5,7 +5,7 @@ require('chromedriver');
   let driver = await new Builder().forBrowser('chrome').build();
   try {
     // WeatherApp sayfasını aç
-    await driver.get('http://localhost:3000/aycaoktay/devops-case');
+    //await driver.get('http://localhost:3000/aycaoktay/devops-case');
     
     // Şehir arama kutusunu bul ve 'Mersin' kelimesini yaz
     await driver.findElement(By.className('cityInput')).sendKeys('Mersin');
