@@ -4,19 +4,21 @@ require('chromedriver');
 (async function example() {
   let driver = await new Builder().forBrowser('chrome').build();
   try {
-    // WeatherApp sayfasını aç
-    await driver.get('http://localhost:3000/aycaoktay/devops-case');
-    
-    // Şehir arama kutusunu bul ve 'Mersin' kelimesini yaz
-    await driver.findElement(By.className('cityInput')).sendKeys('Mersin');
-    
-    // Arama ikonuna tıkla
-    await driver.findElement(By.className('search-icon')).click();
-    
-    // Verilerin yüklenmesi için bekle
-    await driver.wait(until.elementLocated(By.className('weather-location')), 5000);
+    console.log('Navigating to the application...');
+    await driver.get('http://74.248.83.42/aycaoktay/devops-case'); // localhost yerine service external ip
 
-    // Sonuçları kontrol et
+    console.log('Searching for city input...');
+    let cityInput = await driver.findElement(By.className('cityInput'));
+    await cityInput.sendKeys('Mersin');
+
+    console.log('Clicking the search icon...');
+    let searchIcon = await driver.findElement(By.className('search-icon'));
+    await searchIcon.click();
+
+    console.log('Waiting for weather location to be located...');
+    await driver.wait(until.elementLocated(By.className('weather-location')), 10000);
+
+    console.log('Fetching weather location text...');
     let locationText = await driver.findElement(By.className('weather-location')).getText();
     console.log('Bulunan Konum:', locationText);
 
@@ -29,6 +31,8 @@ require('chromedriver');
     let windSpeedText = await driver.findElement(By.className('wind-rate')).getText();
     console.log('Rüzgar Hızı:', windSpeedText);
 
+  } catch (error) {
+    console.error('Error occurred:', error);
   } finally {
     await driver.quit();
   }
