@@ -5,6 +5,9 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = credentials('docker-id')
         GITHUB_CREDENTIALS = credentials('github')
         KUBECONFIG = credentials('kubeconfig-id')
+        CLIENT_ID = '${env.CLIENT_ID}'
+        CLIENT_SECRET = '${env.CLIENT_SECRET}'
+        TENANT_ID = '${env.TENANT_ID}'
     }
 
     stages {
@@ -65,8 +68,10 @@ pipeline {
                 script {
                     // Kubeconfig 
                     withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG')]) {
-                        sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
-                        sh 'sed -i "s/53/${BUILD_NUMBER}/g" devops-case/k8s/deployment.yaml'
+                        sh 'az login --service-principal -u $CLIENT_ID -p $CLIENT_SECRET --tenant $TENANT_ID '
+                        sh 'az aks get-credentials --resource-group internDevopsCase --name MyK8SCluster'
+                        //sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+                        sh 'sed -i "s/52/${BUILD_NUMBER}/g" devops-case/k8s/deployment.yaml'
                         sh 'kubectl apply -f k8s/deployment.yaml'
                     }
                 }
