@@ -2,10 +2,14 @@ const { Builder, By, until } = require('selenium-webdriver');
 require('chromedriver');
 
 (async function example() {
-  let driver = await new Builder().forBrowser('chrome').build();
+  let options = new (require('selenium-webdriver')).chrome.Options()
+    .addArguments('--no-sandbox')
+    .addArguments('--disable-dev-shm-usage');
+
+  let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
   try {
     console.log('Navigating to the application...');
-    await driver.get('http://74.248.83.42/aycaoktay/devops-case'); // localhost yerine service external ip
+    await driver.get('http://74.248.83.42/aycaoktay/devops-case');
 
     console.log('Searching for city input...');
     let cityInput = await driver.findElement(By.className('cityInput'));
