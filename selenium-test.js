@@ -1,22 +1,15 @@
-const { Builder, By, until, Capabilities } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 require('chromedriver');
 
 (async function example() {
-  // Chrome için opsiyonları ayarla
-  let chromeCapabilities = Capabilities.chrome();
-  let options = chromeCapabilities.set('chromeOptions', {
-    args: ['--no-sandbox', '--disable-dev-shm-usage']
-  });
-
-  // WebDriver'ı başlat
-  let driver = await new Builder()
-    .forBrowser('chrome')
-    .withCapabilities(options)
-    .build();
-
+  let driver = await new Builder().forBrowser('chrome').build();
   try {
     console.log('Navigating to the application...');
     await driver.get('http://74.248.83.42/aycaoktay/devops-case');
+
+    // Bekleme kodu ile uygulamanın tamamen hazır olduğundan emin olun
+    console.log('Waiting for the application to be ready...');
+    await driver.wait(until.elementLocated(By.className('ready-indicator')), 30000);
 
     console.log('Searching for city input...');
     let cityInput = await driver.findElement(By.className('cityInput'));
