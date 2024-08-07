@@ -1,14 +1,19 @@
-const { Builder, By, until } = require('selenium-webdriver');
+const { Builder, By, until, Capabilities } = require('selenium-webdriver');
 require('chromedriver');
 
 (async function example() {
-  let options = new (require('selenium-webdriver')).chrome.Options()
-    .addArguments('--no-sandbox')
-    .addArguments('--disable-dev-shm-usage')
-    .addArguments('--headless'); // Bu satır, arka planda tarayıcıyı çalıştırır, genellikle CI/CD ortamlarında kullanılır.
+  // Chrome için opsiyonları ayarla
+  let chromeCapabilities = Capabilities.chrome();
+  let options = chromeCapabilities.set('chromeOptions', {
+    args: ['--no-sandbox', '--disable-dev-shm-usage']
+  });
 
-  let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
-  
+  // WebDriver'ı başlat
+  let driver = await new Builder()
+    .forBrowser('chrome')
+    .withCapabilities(options)
+    .build();
+
   try {
     console.log('Navigating to the application...');
     await driver.get('http://74.248.83.42/aycaoktay/devops-case');
