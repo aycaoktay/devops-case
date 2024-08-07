@@ -69,7 +69,7 @@ pipeline {
                          sh '''
                         az login --service-principal -u $CLIENT_ID -p $CLIENT_SECRET --tenant $TENANT_ID
                         cd /var/lib/jenkins/workspace/weatherapp/k8s
-                        sed -i "s/52/${BUILD_NUMBER}/g" deployment.yaml
+                        sed -i "s/:/${BUILD_NUMBER}/g" deployment.yaml
                         kubectl apply -f deployment.yaml
                         '''
                     }
