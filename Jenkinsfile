@@ -81,7 +81,8 @@ pipeline {
             steps {
                 sh 'npm start &'
                 sh 'sleep 10'
-                sh 'node selenium-test.js'
+                sh 'google-chrome --version'
+                sh 'xvfb-run --server-args="-screen 0 1024x768x24" node selenium-test.js'
             }
         }
     }
