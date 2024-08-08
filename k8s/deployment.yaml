@@ -6,7 +6,7 @@ metadata:
   labels:
     app: weatherapp
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: weatherapp
@@ -29,7 +29,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 443
+  - port: 8080
     targetPort: 8080
   selector:
     app: ClusterIP
@@ -51,4 +51,4 @@ spec:
           service:
             name: weatherapp-service
             port:
-              number: 443
+              number: 8080
