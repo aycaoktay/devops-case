@@ -53,10 +53,10 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-id', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                         docker.withRegistry('https://index.docker.io/v1/', 'docker-id') {
-                            sh 'docker push aycaoktay/weatherapp-nodejs:${BUILD_ID}'
+                            sh 'docker push aycaoktay/weatherapp-node:${BUILD_ID}'
                         }
                     }
-                    sh 'grype aycaoktay/weatherapp-nodejs:${BUILD_ID}'
+                    sh 'grype aycaoktay/weatherapp-node:${BUILD_ID}'
                 }
             }
         }

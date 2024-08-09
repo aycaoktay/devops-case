@@ -17,9 +17,9 @@ spec:
     spec:
       containers:
       - name: weatherapp
-        image: aycaoktay/weatherapp-nodejs:73
+        image: aycaoktay/weatherapp-node:rahime
         ports:
-        - containerPort: 8080
+        - containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
@@ -30,7 +30,7 @@ spec:
   type: ClusterIP
   ports:
   - port: 8080
-    targetPort: 8080
+    targetPort: 3000
   selector:
     app: weatherapp
 ---
